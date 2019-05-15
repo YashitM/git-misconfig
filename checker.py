@@ -52,7 +52,11 @@ def send_request(url, result, counter, total_urls, lock):
 		check_request = requests.get(new_url, timeout=5)
 		if check_request.status_code == 200:
 			misconfigured_urls.append(new_url)
-	except requests.exceptions.Timeout:
+	# except requests.exceptions.Timeout:
+	# 	pass
+	# except requests.exceptions.ConnectionError:
+	# 	pass
+	except:
 		pass
 
 	lock.acquire()
