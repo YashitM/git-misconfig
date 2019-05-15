@@ -33,13 +33,24 @@ def validate_url(url):
 
 	return url
 
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
+
+    if iteration == total: 
+        print()
+
 def main():
 	file_location, num_threads = setup_parser()
 	urls = open(file_location, "r").readlines()
 
 	misconfigured_urls = list()
 
-	for url in urls:
+	printProgressBar(0, len(urls), prefix = 'Progress:', suffix = 'Complete', length = 50)
+
+	for counter, url in enumerate(urls):
 		filtered_url = validate_url(url.rstrip('\n'))
 		new_url = filtered_url.rstrip('\n') + ".git/"
 
@@ -49,7 +60,9 @@ def main():
 				print("[+] Git Misconfiguration Found in: " + new_url)
 				misconfigured_urls.append(new_url)
 		except requests.exceptions.Timeout:
-			continue
+			pass
+			
+		printProgressBar(counter + 1, len(urls), prefix = 'Progress:', suffix = 'Complete', length = 50)
 
 	print("[x] Scan Complete. Found " + str(len(misconfigured_urls)) + " Misconfigured URLs from " + str(len(urls)) + " total URLs.")
 
