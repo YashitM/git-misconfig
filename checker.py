@@ -11,16 +11,11 @@ misconfigured_urls = list()
 def setup_parser():
 	parser = argparse.ArgumentParser(description='A MultiThreaded Git Misconfiguration Checker')
 	parser.add_argument('-f', '--file', type=str, help="File Location", required=True)
-	parser.add_argument('-t', '--threads', type=int, help="Threads to Spawn", required=False)
 	args = parser.parse_args()
 
 	file_location = args.file
-	num_threads = 5 # Default number of threads
 
-	if args.threads:
-		num_threads = args.threads
-
-	return file_location, num_threads
+	return file_location
 
 def validate_url(url):
 	valid_protocols = ['http', 'https']
@@ -69,7 +64,7 @@ def send_request(url, result, counter, total_urls, lock):
 
 
 def main():
-	file_location, num_threads = setup_parser()
+	file_location = setup_parser()
 	urls = open(file_location, "r").readlines()
 
 	print_progress_bar(0, len(urls), prefix = 'Progress:', suffix = 'Complete', length = 50)
