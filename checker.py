@@ -33,10 +33,10 @@ def validate_url(url):
 
 	return url
 
-def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
+def print_progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
+    filled_length = int(length * iteration // total)
+    bar = fill * filled_length + '-' * (length - filled_length)
     print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
 
     if iteration == total: 
@@ -57,14 +57,17 @@ def main():
 		try:
 			check_request = requests.get(new_url, timeout=5)
 			if check_request.status_code == 200:
-				print("[+] Git Misconfiguration Found in: " + new_url)
 				misconfigured_urls.append(new_url)
 		except requests.exceptions.Timeout:
 			pass
-			
-		printProgressBar(counter + 1, len(urls), prefix = 'Progress:', suffix = 'Complete', length = 50)
+
+		print_progress_bar(counter + 1, len(urls), prefix = 'Progress:', suffix = 'Complete', length = 50)
+
+	for misconfigured_url in misconfigured_urls:
+		print("[+] " + misconfigured_url)
 
 	print("[x] Scan Complete. Found " + str(len(misconfigured_urls)) + " Misconfigured URLs from " + str(len(urls)) + " total URLs.")
+
 
 if __name__ == '__main__':
 	main()
